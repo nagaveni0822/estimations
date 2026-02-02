@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gold Price Estimator</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: linear-gradient(135deg, #2e0066, #4b0082, #6a0dad);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.content {
+  width: 100%;
+  max-width: 1000px;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 2.4rem;
+  color: #ffd700;
+}
+
+.card {
+  background: rgba(30,10,70,0.45);
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+.result {
+  background: rgba(0,0,0,0.25);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.result-row, .total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.total-row {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+@media (max-width: 768px) {
+  html, body { overflow: auto; }
+  .split-layout { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="content">
+  <div class="header">
+    <h1 class="title">Gold Price Calculator (OLD)</h1>
+  </div>
+
+  <div class="card split-layout">
+
+    <div>
+      <div class="input-row">
+        <div>
+          <label>Weight (grams)</label>
+          <input type="number" id="weight" value="10">
+        </div>
+        <div>
+          <label>Purity (%)</label>
+          <select id="purity">
+            <option value="91.6">22K</option>
+            <option value="75">18K</option>
+            <option value="58.5">14K</option>
+            <option value="100">24K</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div>
+          <label>Rate per gram (₹)</label>
+          <input type="number" id="rate" value="600">
+        </div>
+        <div>
+          <label>Making Charges (%)</label>
+          <input type="number" id="making" value="10">
+        </div>
+      </div>
+    </div>
+
+    <div class="result">
+      <div class="result-row">
+        <span>Base Price</span>
+        <span id="base-price"></span>
+      </div>
+      <div class="result-row">
+        <span>Making Charges</span>
+        <span id="making-charges"></span>
+      </div>
+      <div class="result-row">
+        <span>GST (3%)</span>
+        <span id="gst"></span>
+      </div>
+      <div class="total-row">
+        <span>Total</span>
+        <span id="total-price"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const weightInput = document.getElementById("weight");
+const puritySelect = document.getElementById("purity");
+const rateInput = document.getElementById("rate");
+const makingInput = document.getElementById("making");
+
+const basePrice = document.getElementById("base-price");
+const makingChargesEl = document.getElementById("making-charges");
+const gstEl = document.getElementById("gst");
+const totalPrice = document.getElementById("total-price");
+
+function formatRupees(amount) {
+  return "₹" + Math.round(amount).toLocaleString("en-IN");
+}
+
+function calculate() {
+  const weight = +weightInput.value || 0;
+  const purity = +puritySelect.value || 100;
+  const rate = +rateInput.value || 0;   // MANUAL RATE
+  const making = +makingInput.value || 0;
+
+  const base = weight * rate * (purity / 100);
+  const makingCharges = base * (making / 100);
+  const gst = (base + makingCharges) * 0.03;
+  const total = base + makingCharges + gst;
+
+  basePrice.textContent = formatRupees(base);
+  makingChargesEl.textContent = formatRupees(makingCharges);
+  gstEl.textContent = formatRupees(gst);
+  totalPrice.textContent = formatRupees(total);
+}
+
+document.querySelectorAll("input, select")
+  .forEach(el => el.addEventListener("input", calculate));
+
+calculate();
+</script>
+
+</body>
+</html>
