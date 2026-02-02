@@ -253,8 +253,8 @@ input, select {
 
 <script>
 const inputs = document.querySelectorAll('input, select');
-function formatToLakhs(amount) {
-  return "₹" + (amount / 100000).toFixed(2) + " L";
+function formatRupees(amount) {
+  return "₹" + amount.toLocalString("en-IN");
 }
 
 function calculate() {
@@ -268,10 +268,10 @@ function calculate() {
   const gst = (base + makingCharges) * 0.03;
   const total = base + makingCharges + gst;
 
-  basePrice.textContent = formatToLakhs(base);
-makingChargesEl.textContent = formatToLakhs(makingCharges);
-gstEl.textContent = formatToLakhs(gst);
-totalPrice.textContent = formatToLakhs(total);
+  basePrice.textContent = formatRupees(base);
+makingChargesEl.textContent = formatRupees(makingCharges);
+gstEl.textContent = formatRupees(gst);
+totalPrice.textContent = formatRupees(total);
 }
 const weightInput = document.getElementById("weight");
 const puritySelect = document.getElementById("purity");
