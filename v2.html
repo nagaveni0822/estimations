@@ -212,7 +212,7 @@ input, select {
       <div class="input-row">
         <div class="input-field">
           <label>Rate per Gram (₹)</label>
-          <input type="number" id="rate" readonly>
+          <input type="number" id="rate" >
         </div>
         <div class="input-field">
           <label>Making Charges (%)</label>
@@ -259,7 +259,7 @@ const goldRates = {
   75: 12063,    // 18K
   58.5: 9500    // 14K
 };
-const inputs = document.querySelectorAll('input, select');
+const inputs = document.querySelectorAll('#weight, #making');
 function formatRupees(amount) {
   return "₹" + Math.round(amount).toLocaleString("en-IN");
 }
@@ -267,8 +267,8 @@ function formatRupees(amount) {
 function calculate() {
   const weight = +weightInput.value || 0;
   const purity = +puritySelect.value || 100;
-  const rate = goldRates[purity] || 0;   // today rate by purity
-rateInput.value = rate;                // input lo show
+  const rate = +rateInput.value || 0;
+
 
   const making = +makingInput.value || 0;
 
@@ -291,8 +291,16 @@ const basePrice = document.getElementById("base-price");
 const makingChargesEl = document.getElementById("making-charges");
 const gstEl = document.getElementById("gst");
 const totalPrice = document.getElementById("total-price");
+puritySelect.addEventListener("change", () => {
+  rateInput.value = goldRates[puritySelect.value] || 0;
+  calculate();
+});
+
 
 inputs.forEach(i => i.addEventListener("input", calculate));
+rateInput.addEventListener("input", calculate);
+
+rateInput.value = goldRates[puritySelect.value];
 calculate();
 </script>
 
